@@ -9,38 +9,59 @@ const imagem = document.querySelector('.app__image');
 const timer = document.querySelector('.app__card-timer');
 const btComecar = document.querySelector('.app__card-primary-button');
 
+const botoes = document.querySelectorAll(".app__card-button");//pegando todos os botões com essa classe
+
 let timerFoco = 1500;
 let timerCurto = 300;
 let timerLongo = 900;
 
 btFoco.addEventListener('click', () =>{
-    html.setAttribute('data-contexto', 'foco');
-    titulo.innerHTML = `<h1 class="app__title">
-                Otimize sua produtividade,<br>
-                <strong class="app__title-strong">mergulhe no que importa.</strong>
-            </h1>`
-
-    imagem.setAttribute('src', '/imagens/foco.png');
+    AlterarContexto('foco');
+    btFoco.classList.add("active");
 });
 btCurto.addEventListener('click', () => {
-    html.setAttribute('data-contexto', 'descanso-curto');
-    titulo.innerHTML = `<h1 class="app__title">
-                Outro texto,<br>
-                <strong class="app__title-strong">Outro texto.</strong>
-            </h1>`
-            imagem.setAttribute('src', '/imagens/descanso-curto.png');
+    AlterarContexto('descanso-curto');
+    btCurto.classList.add("active");
 });
 btLongo.addEventListener('click', () =>{
-    html.setAttribute('data-contexto', 'descanso-longo');
-    titulo.innerHTML = `<h1 class="app__title">
-    Outro texto texto,<br>
-    <strong class="app__title-strong">Outro texto textyo.</strong>
-</h1>`
-imagem.setAttribute('src', '/imagens/descanso-longo.png');
+    AlterarContexto('descanso-longo');
+    btLongo.classList.add("active");
 });
 
 
+function AlterarContexto(contexto) {
+    botoes.forEach(function(contexto) {
+        contexto.classList.remove('active');  
+        //Assim remove dinamicamente a classe de cada botão     
+    });
+    html.setAttribute('data-contexto', contexto);
+    imagem.setAttribute('src', `/imagens/${contexto}.png`);
 
+    switch (contexto) {
+        case 'foco':
+            titulo.innerHTML = `<h1 class="app__title">
+            Otimize sua produtividade,<br>
+            <strong class="app__title-strong">mergulhe no que importa.</strong>
+            </h1>`
+            
+            break;
+        case "descanso-curto":
+            titulo.innerHTML = `<h1 class="app__title">
+            Que tal dar uma respirada,<br>
+            <strong class="app__title-strong">Faça uma pausa curta.</strong>
+            </h1>` 
+            
+            break;
+        case "descanso-longo":
+            titulo.innerHTML = `<h1 class="app__title">
+            Hora de voltar a superficie,<br>
+            <strong class="app__title-strong">Faça uma pausa longa.</strong>
+            </h1>`
+            break;
+        default:
+            break;
+    }
+}
 
 
 
