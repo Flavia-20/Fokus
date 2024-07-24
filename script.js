@@ -91,7 +91,7 @@ const contagemRegressiva = () => {
         beep.play();
         return
     }
-    tempoDecorridoEmSegundos -= 1
+    tempoDecorridoEmSegundos -= 1;
     mostrarTempo();
 }
 btComecar.addEventListener('click', iniciarOuPausar);
@@ -114,7 +114,6 @@ function zerar() {
     clearInterval(intervaloId);
     intervaloId = null;
 }
-
 
 function mostrarTempo() {
     const tempo = new Date(tempoDecorridoEmSegundos * 1000)
