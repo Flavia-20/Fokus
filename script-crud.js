@@ -1,14 +1,15 @@
-
 // encontrar o botão adicionar tarefa
 const btnAdicionarTarefa = document.querySelector('.app__button--add-task');
 const formAdicionarTarefa = document.querySelector('.app__form-add-task');
 const textarea = document.querySelector('.app__form-textarea');
+const ulTarefas = document.querySelector('.app__section-task-list');
 
-const tarefas = [];
+const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+//JSON.parce é o inverso do stringfy()
 
 function criarElementoTarefa(tarefa) {
-    const li = document.createElement('li')
-    li.classList.add('app__section-task-list-item')
+    const li = document.createElement('li');
+    li.classList.add('app__section-task-list-item');
 
     const svg = document.createElement('svg');
     svg.innerHTML = `
@@ -22,8 +23,11 @@ function criarElementoTarefa(tarefa) {
 
     const paragrafo = document.createElement('p');
     paragrafo.textContent = tarefa.descricao;
-
+    paragrafo.classList.add('app__section-task-list-item-description');
+ 
     const botao = document.createElement('button');
+    botao.classList.add('app_button-edit');
+
     const imagemBotao = document.createElement('img');
     imagemBotao.setAttribute('src', '/imagens/edit.png');
     botao.append(imagemBotao);
@@ -31,15 +35,15 @@ function criarElementoTarefa(tarefa) {
     li.append(svg);
     li.append(paragrafo);
     li.append(botao);
+
+    return li;
 }
 
-
 btnAdicionarTarefa.addEventListener('click', () => {
-    //o form por vem com a classe hodem e eu quero remover ela 
+    //o form por vem com a classe hidden e eu quero remover ela 
     formAdicionarTarefa.classList.toggle('hidden');
     //toggle serve para se a classe existir ela for removida e não ela é adcionada
 })
-
 
 formAdicionarTarefa.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -48,8 +52,15 @@ formAdicionarTarefa.addEventListener('submit', (e) => {
             descricao: textarea.value
     }
     tarefas.push(tarefa);
+    const elementoTarefa = criarElementoTarefa(tarefa);
+    ulTarefas.append(elementoTarefa);
     //colocar um item dentro dolocalStorge, que item? tarefas. 1° parametro, chave, 2°: valor
     localStorage.setItem('tarefas', JSON.stringify(tarefas));//JSON.stringify() converte os valores para uma string JSON
-
-
+    textarea.value = '';
+    formAdicionarTarefa.classList.add('hidden');
 })
+
+tarefas.forEach(tarefa => {
+    const elementoTarefa = criarElementoTarefa(tarefa);
+    ulTarefas.append(elementoTarefa);
+});
