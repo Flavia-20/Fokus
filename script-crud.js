@@ -1,11 +1,16 @@
-// encontrar o botão adicionar tarefa
+
 const btnAdicionarTarefa = document.querySelector('.app__button--add-task');
 const formAdicionarTarefa = document.querySelector('.app__form-add-task');
+const btnCancelarTarefa = document.querySelector('.app__form-footer__button--cancel');
 const textarea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
 
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
 //JSON.parce é o inverso do stringfy()
+
+function atualizarTarefas(){
+    localStorage.setItem('tarefas', JSON.stringify(tarefas));//JSON.stringify() converte os valores para uma string JSON
+}
 
 function criarElementoTarefa(tarefa) {
     const li = document.createElement('li');
@@ -28,6 +33,21 @@ function criarElementoTarefa(tarefa) {
     const botao = document.createElement('button');
     botao.classList.add('app_button-edit');
 
+    botao.onclick =() =>{
+        const novaDescricao = prompt("Qual é o novo nome da tarefa?");
+        console.log('A nova descrição é: ', novaDescricao);
+        if( novaDescricao == null || novaDescricao.length < 0 || novaDescricao == ""){
+            const precisaDeDescricao = prompt("Você precisa digitar uma nova descição!");
+            paragrafo.textContent = precisaDeDescricao;//Atualização da camada visual
+            tarefa.descricao = precisaDeDescricao;//Atualização da referencia da tarefa, camada de dados
+            atualizarTarefas();//Atualização da LocalStorage
+        }else{
+            paragrafo.textContent = novaDescricao;//Atualização da camada visual
+            tarefa.descricao = novaDescricao;//Atualização da referencia da tarefa, camada de dados
+            atualizarTarefas();//Atualização da LocalStorage
+        }        
+    }
+
     const imagemBotao = document.createElement('img');
     imagemBotao.setAttribute('src', '/imagens/edit.png');
     botao.append(imagemBotao);
@@ -38,6 +58,14 @@ function criarElementoTarefa(tarefa) {
 
     return li;
 }
+
+//checar essa função, ela não esta atribuindo hidden  ao textarea
+const limparFormulario = () =>{
+    textarea.value = "";
+    btnAdicionarTarefa.classList.toggle('hiden');
+} 
+btnCancelarTarefa.addEventListener('click', limparFormulario);
+
 
 btnAdicionarTarefa.addEventListener('click', () => {
     //o form por vem com a classe hidden e eu quero remover ela 
@@ -55,7 +83,7 @@ formAdicionarTarefa.addEventListener('submit', (e) => {
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.append(elementoTarefa);
     //colocar um item dentro dolocalStorge, que item? tarefas. 1° parametro, chave, 2°: valor
-    localStorage.setItem('tarefas', JSON.stringify(tarefas));//JSON.stringify() converte os valores para uma string JSON
+    atualizarTarefas();
     textarea.value = '';
     formAdicionarTarefa.classList.add('hidden');
 })
