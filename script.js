@@ -86,9 +86,15 @@ function AlterarContexto(contexto) {
 
 const contagemRegressiva = () => {
     if(tempoDecorridoEmSegundos <= 0){
+        beep.play();
+        const focoAtivo = html.getAttribute('data-contexto') == 'foco';
+        if(focoAtivo){
+            const evento = new CustomEvent('FocoFinalizado')
+            document.dispatchEvent(evento);
+            //Criei um evento customizado
+        }
         zerar();
         //alert('Tempo finalizado!')
-        beep.play();
         return
     }
     tempoDecorridoEmSegundos -= 1;

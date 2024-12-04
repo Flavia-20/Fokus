@@ -4,9 +4,14 @@ const formAdicionarTarefa = document.querySelector('.app__form-add-task');
 const btnCancelarTarefa = document.querySelector('.app__form-footer__button--cancel');
 const textarea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
+const paragrafoDescricaoTarefa = document.querySelector('.app__section-active-task-description');
 
 const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
 //JSON.parce é o inverso do stringfy()
+
+let tarefaSelecionada = null;
+let liTarefaSelecionada = null;
+
 
 function atualizarTarefas(){
     localStorage.setItem('tarefas', JSON.stringify(tarefas));//JSON.stringify() converte os valores para uma string JSON
@@ -25,7 +30,6 @@ function criarElementoTarefa(tarefa) {
                 fill="#01080E"></path>
         </svg>
     `
-
     const paragrafo = document.createElement('p');
     paragrafo.textContent = tarefa.descricao;
     paragrafo.classList.add('app__section-task-list-item-description');
@@ -56,7 +60,26 @@ function criarElementoTarefa(tarefa) {
     li.append(paragrafo);
     li.append(botao);
 
-    return li;
+    li.onclick = () => {
+        document.querySelectorAll('.app__section-task-list-item-active')
+            .forEach(elemento => {
+                elemento.classList.remove('app__section-task-list-item-active');
+                /*classList remove a classe, o css, se eu não colocar o claslist e for direto pro remove ele remove todo o elemento*/
+            })
+
+        if (tarefaSelecionada == tarefa) {
+            paragrafoDescricaoTarefa.textContent = "";
+            tarefaSelecionada = null;
+            liTarefaSelecionada = null;
+            return;
+        }
+        tarefaSelecionada = tarefa;
+        liTarefaSelecionada = li;
+        paragrafoDescricaoTarefa.textContent = tarefa.descricao
+        
+        li.classList.add('app__section-task-list-item-active');
+    }
+    return li
 }
 
 //checar essa função, ela não esta atribuindo hidden  ao textarea
@@ -92,3 +115,11 @@ tarefas.forEach(tarefa => {
     const elementoTarefa = criarElementoTarefa(tarefa);
     ulTarefas.append(elementoTarefa);
 });
+
+document.addEventListener('FocoFinalizado', ()=> {
+    if(tarefaSelecionada && liTarefaSelecionada){
+        liTarefaSelecionada.classList.remove('app__section-task-list-item-active')
+        liTarefaSelecionada.classList.add('app__section-task-list-item-complete')
+        liTarefaSelecionada.querySelector('button').setAttribute('disabled', 'disabled')
+    }
+})
