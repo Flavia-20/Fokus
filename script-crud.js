@@ -6,7 +6,10 @@ const textarea = document.querySelector('.app__form-textarea');
 const ulTarefas = document.querySelector('.app__section-task-list');
 const paragrafoDescricaoTarefa = document.querySelector('.app__section-active-task-description');
 
-const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
+const btnRemoverConcluidas = document.querySelector('#btn-remover-concluidas');
+const btnRemoverTodas = document.querySelector('#btn-remover-todas');
+
+let tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
 //JSON.parce é o inverso do stringfy()
 
 let tarefaSelecionada = null;
@@ -94,7 +97,6 @@ const limparFormulario = () =>{
 } 
 btnCancelarTarefa.addEventListener('click', limparFormulario);
 
-
 btnAdicionarTarefa.addEventListener('click', () => {
     //o form por vem com a classe hidden e eu quero remover ela 
     formAdicionarTarefa.classList.toggle('hidden');
@@ -130,4 +132,17 @@ document.addEventListener('FocoFinalizado', ()=> {
         tarefaSelecionada.completa = true;
         atualizarTarefas()
     }
-})
+});
+
+const removerTarefas = (somenteCompletas) => {
+    const seletor = somenteCompletas ? ".app__section-task-list-item-complete" : ".app__section-task-list-item";
+    document.querySelectorAll(seletor)
+        .forEach(elemento =>{
+            elemento.remove();
+    })
+    tarefas = somenteCompletas ? tarefas.filter(tarefa => !tarefa.completa) : [];
+    atualizarTarefas();
+}
+
+btnRemoverConcluidas.onclick = () => removerTarefas(true);
+btnRemoverTodas.onclick = () => removerTarefas(false);

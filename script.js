@@ -30,7 +30,7 @@ musicaFocoImput.addEventListener('change', ()=> {
 
 const btComecar = document.querySelector('.app__card-primary-button');
 
-let tempoDecorridoEmSegundos = 1500;
+let tempoDecorridoEmSegundos = 5;
 let intervaloId = null
 
 
